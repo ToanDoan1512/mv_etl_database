@@ -1,0 +1,51 @@
+with data_raw as (
+select
+    res_partner.id,  
+    date_trunc('day', res_partner.create_date + interval '+7 hour') create_date,
+    date_part('hour', res_partner.create_date + interval '+7 hour') create_hour,
+    res_partner.was_closed, 
+    res_partner.contact_creator_id, 
+    res_partner.marketing_team_id team_id, 
+    res_partner.crm_group_id, 
+    res_partner.crmf99_system_id, 
+    utm_source.channel_id, 
+    res_partner.country_type_id, 
+    res_partner.product_category_id, 
+    utm_source.user_id source_user_id, 
+    utm_source.crm_group_id source_crm_group_id, 
+    utm_source.id source_id
+from res_partner
+    left join utm_source on res_partner.source_id=utm_source.id
+where
+    res_partner.active is true
+) 
+    
+select 
+    create_date
+    , create_hour
+    , contact_creator_id
+    , team_id
+    , product_category_id
+    , crm_group_id
+    , crmf99_system_id
+    , channel_id
+    , country_type_id
+    , source_user_id
+    , source_crm_group_id
+    , source_id
+    , count(distinct id) tong_sdt 
+    , count(distinct id) filter(where was_closed is null or was_closed is false) sdt 
+from data_raw
+group by 
+    create_date
+    , create_hour
+    , contact_creator_id
+    , team_id
+    , product_category_id
+    , crm_group_id
+    , crmf99_system_id
+    , channel_id
+    , country_type_id
+    , source_user_id
+    , source_crm_group_id
+    , source_id
