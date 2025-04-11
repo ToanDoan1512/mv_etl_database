@@ -285,7 +285,7 @@ CREATE UNIQUE INDEX idx_tab_note_bc_co_hoi_row_id ON tab_note_bc_co_hoi (row_id)
 CREATE MATERIALIZED VIEW tab_bc_co_hoi AS
 select 
     row_number() OVER () AS row_id
-    , rm_lead.id lead_id 
+    , crm_lead.id lead_id 
     , crm_lead.first_user_id
     , crm_lead.user_id
     , crm_group.id crm_group_id 
